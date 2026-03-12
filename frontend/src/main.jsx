@@ -1,10 +1,9 @@
-import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router";
-import "./index.css";
+import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
+import "./index.css";
 
-createRoot(document.getElementById("root")).render(
-  <BrowserRouter>
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
     <App />
-  </BrowserRouter>,
+  </GoogleOAuthProvider>,
 );

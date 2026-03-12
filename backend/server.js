@@ -1,7 +1,9 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
 
+const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const technicianRoutes = require("./routes/technicianRoutes");
 const serviceRoutes = require("./routes/serviceRoutes");
@@ -20,6 +22,7 @@ app.get("/", (req, res) => {
   res.send("Welcome to LocalFix API");
 });
 
+app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/technicians", technicianRoutes);
 app.use("/api/services", serviceRoutes);
