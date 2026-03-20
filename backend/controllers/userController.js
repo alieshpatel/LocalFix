@@ -16,7 +16,7 @@ exports.syncUser = async (req, res) => {
         name, 
         email, 
         avatar: imageUrl || "",
-        role: "customer" 
+        role: "pending" 
       });
     }
 
