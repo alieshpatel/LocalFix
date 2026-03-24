@@ -8,10 +8,25 @@ const userSchema = new mongoose.Schema({
   phone: { type: String, default: "" },
   role: {
     type: String,
-    enum: ["customer", "provider", "admin"],
-    default: "customer"
+    enum: ["customer", "provider", "pending"],
+    default: "pending"
   },
   // Provider specific fields
+  bio: {
+    type: String,
+    default: ""
+  },
+  hourlyRate: {
+    type: Number,
+    default: 0
+  },
+  skills: [{
+    type: String
+  }],
+  experienceYears: {
+    type: Number,
+    default: 0
+  },
   isAvailable: {
     type: Boolean,
     default: false

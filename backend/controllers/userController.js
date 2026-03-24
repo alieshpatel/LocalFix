@@ -59,3 +59,46 @@ exports.getProviders = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.setRole = async (req, res) => {
+  try {
+    const { clerkId, role } = req.body;
+    const user = await User.findOneAndUpdate(
+      { clerkId },
+      { $set: { role } },
+      { new: true }
+    );
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getProviderProfile = async (req, res) => {
+  try {
+    const { clerkId } = req.params;
+    const user = await User.findOne({ clerkId });
+    if (!user) return res.status(404).json({ error: "Provider not found" });
+    
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.updateProviderProfile = async (req, res) => {
+  try {
+    const { clerkId, bio, hourlyRate, skills, experienceYears } = req.body;
+    
+    if (!clerkId) return res.status(400).json({ error: "Missing clerkId" });
+
+    const user = await User.findOneAndUpdate(
+      { clerkId },
+      { $set: { bio, hourlyRate, skills, experienceYears } },
+      { new: true }
+    );
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
