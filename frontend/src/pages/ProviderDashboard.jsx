@@ -22,7 +22,6 @@ function ProviderDashboard() {
         setProfile(res.data);
         setProfileForm({
           bio: res.data.bio || '',
-          hourlyRate: res.data.hourlyRate || 0,
           skills: res.data.skills ? res.data.skills.join(', ') : '',
           experienceYears: res.data.experienceYears || 0
         });
@@ -97,20 +96,7 @@ function ProviderDashboard() {
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2 uppercase tracking-wide">Hourly Rate ($)</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                     <span className="text-gray-500 font-bold">$</span>
-                  </div>
-                  <input 
-                    type="number" 
-                    value={profileForm.hourlyRate}
-                    onChange={e => setProfileForm({...profileForm, hourlyRate: e.target.value})}
-                    className="w-full border border-gray-200 bg-white rounded-xl py-3 pl-8 pr-4 focus:ring-4 focus:ring-primary-100 focus:border-primary-500 transition-all outline-none"
-                  />
-                </div>
-              </div>
+              
               <div>
                 <label className="block text-sm font-bold text-gray-900 mb-2 uppercase tracking-wide">Experience (Yrs)</label>
                 <input 
