@@ -1,84 +1,127 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Star, Shield, Clock } from 'lucide-react';
+import { SignedIn, SignedOut, SignInButton } from '@clerk/clerk-react';
+import { ArrowRight, Star, Shield, Clock, Zap } from 'lucide-react';
 import api from '../utils/api';
 
 function Home() {
   const [services, setServices] = useState([]);
 
   useEffect(() => {
-    // We will stub this with an API call later. For now, static list or mock fetch.
     api.get('/services').then(res => setServices(res.data)).catch(() => {
-      // Create some default services if API doesn't have any
       setServices([
-        { _id: '1', name: 'Plumbing Repair', description: 'Fix leaks, install pipes.', basePrice: 50 },
-        { _id: '2', name: 'Electrical Works', description: 'Wiring, fixtures, panels.', basePrice: 65 },
-        { _id: '3', name: 'Home Cleaning', description: 'Deep cleaning, dusting.', basePrice: 80 }
+        { _id: '1', name: 'Plumbing Repair', description: 'Expert plumbing for any leak, pipe, or installation.', basePrice: 50 },
+        { _id: '2', name: 'Electrical Services', description: 'Safe and certified electrical wiring and repairs.', basePrice: 65 },
+        { _id: '3', name: 'Home Cleaning', description: 'Deep pristine cleaning for a sparkling home.', basePrice: 80 }
       ]);
     });
   }, []);
 
   return (
-    <div className="flex flex-col gap-16 pb-12">
+    <div className="flex flex-col relative overflow-hidden">
+      {/* Premium Animated Background */}
+      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-bl from-primary-400/20 to-purple-400/20 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-pulse-slow"></div>
+      <div className="absolute top-[20%] left-[-10%] w-[600px] h-[600px] bg-gradient-to-tr from-blue-400/20 to-teal-400/20 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+
       {/* Hero Section */}
-      <section className="text-center mt-12">
-        <h1 className="text-5xl font-extrabold text-gray-900 tracking-tight mb-4">
-          Professional Home Services <br/>
-          <span className="text-blue-600">On Demand</span>
+      <section className="relative z-10 pt-24 pb-32 px-4 sm:px-6 text-center max-w-5xl mx-auto flex flex-col items-center animate-slide-up">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-primary-500/20 text-primary-700 font-medium mb-8 text-sm shadow-sm backdrop-blur-md">
+          <Zap size={16} className="text-primary-500" /> 
+          Now available in 50+ cities across the country
+        </div>
+        
+        <h1 className="text-6xl sm:text-7xl font-extrabold text-gray-900 tracking-tighter mb-8 leading-[1.1]">
+          Premium Home Services <br className="hidden sm:block"/>
+          <span className="text-gradient">On Demand.</span>
         </h1>
-        <p className="max-w-2xl mx-auto text-xl text-gray-500 mb-8">
-          Book trusted, reliable professionals for your home repair and maintenance needs. Fast, transparent pricing with guaranteed quality.
+        
+        <p className="max-w-2xl mx-auto text-xl text-gray-600 mb-12 leading-relaxed">
+          Book elite, background-checked professionals for all your home repair and maintenance needs. Transparent pricing. Guaranteed excellence.
         </p>
-        <div className="flex justify-center gap-4">
-          <Link to="/customer" className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition flex items-center gap-2">
-            Book a Service <ArrowRight size={20} />
+        
+        <div className="flex flex-col sm:flex-row justify-center gap-4 w-full sm:w-auto">
+          <Link to="/services" className="bg-gradient-to-r from-primary-600 to-indigo-600 text-white px-8 py-4 rounded-full font-bold shadow-xl shadow-primary-500/30 hover:shadow-primary-500/50 hover:-translate-y-1 transition-all flex items-center justify-center gap-2 text-lg">
+            Explore Services <ArrowRight size={20} />
           </Link>
-          <Link to="/provider" className="bg-white text-blue-600 border border-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition">
-            Become a Provider
-          </Link>
+          <SignedIn>
+            <Link to="/provider" className="glass bg-white/50 text-gray-800 border-2 border-gray-200 px-8 py-4 rounded-full font-bold hover:bg-gray-50 hover:border-gray-300 transition-all flex items-center justify-center text-lg shadow-sm">
+              Become a Pro
+            </Link>
+          </SignedIn>
+          <SignedOut>
+            <SignInButton mode="modal">
+              <button className="glass bg-white/50 text-gray-800 border-2 border-gray-200 px-8 py-4 rounded-full font-bold hover:bg-gray-50 hover:border-gray-300 transition-all flex items-center justify-center text-lg shadow-sm w-full sm:w-auto">
+                Become a Pro
+              </button>
+            </SignInButton>
+          </SignedOut>
         </div>
       </section>
 
       {/* Services Grid */}
-      <section className="mt-8">
-        <h2 className="text-3xl font-bold text-center mb-8">Our Top Services</h2>
+      <section className="relative z-10 py-16 px-4 max-w-7xl mx-auto w-full">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-extrabold text-gray-900 tracking-tight">Our Elite Services</h2>
+          <p className="text-gray-500 mt-4 text-lg">Top-tier professionals ready when you are.</p>
+        </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {services.map(service => (
-            <div key={service._id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition">
-              <h3 className="text-xl font-semibold mb-2">{service.name}</h3>
-              <p className="text-gray-600 mb-4">{service.description}</p>
-              <div className="flex justify-between items-center">
-                <span className="text-lg font-bold text-gray-900">From ${service.basePrice}</span>
-                <Link to="/customer" className="text-blue-600 font-medium hover:underline">Book Now</Link>
+          {services.slice(0, 3).map((service, index) => (
+            <div key={service._id} className="glass rounded-3xl p-8 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 group border border-white/50 relative overflow-hidden" style={{ animationDelay: `${index * 150}ms` }}>
+              <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-white/10 z-0"></div>
+              <div className="relative z-10">
+                <div className="bg-gradient-to-br from-primary-500 to-purple-500 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-primary-500/20 group-hover:scale-110 transition-transform">
+                   <Star className="text-white w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3 text-gray-900">{service.name}</h3>
+                <p className="text-gray-600 mb-8 leading-relaxed line-clamp-2">{service.description}</p>
+                <div className="flex justify-between items-center mt-auto">
+                  <div>
+                    <span className="text-sm font-semibold uppercase tracking-wider text-gray-400 block mb-1">Starting at</span>
+                    <span className="text-2xl font-black text-gray-900">${service.basePrice}</span>
+                  </div>
+                  <Link 
+                    to="/services" 
+                    className="w-12 h-12 rounded-full bg-gray-50 group-hover:bg-primary-600 group-hover:text-white flex items-center justify-center transition-colors shadow-sm"
+                  >
+                    <ArrowRight size={20} />
+                  </Link>
+                </div>
               </div>
             </div>
           ))}
         </div>
       </section>
       
-      {/* Features */}
-      <section className="bg-blue-50 rounded-2xl p-12 mt-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-          <div className="flex flex-col items-center">
-            <div className="bg-blue-100 p-4 rounded-full mb-4">
-              <Star className="text-blue-600 h-8 w-8" />
+      {/* Premium Features */}
+      <section className="relative z-10 max-w-7xl mx-auto w-full my-24 px-4">
+        <div className="glass-dark bg-gray-900 rounded-[3rem] p-12 md:p-20 overflow-hidden relative shadow-2xl">
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-500/20 rounded-full mix-blend-overlay filter blur-[80px] -translate-y-1/2 translate-x-1/3"></div>
+          
+          <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+            <div className="flex flex-col items-center">
+              <div className="bg-white/10 p-5 rounded-2xl mb-6 backdrop-blur-md border border-white/10 text-primary-400">
+                <Shield className="h-10 w-10" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4 text-white">Verified Pros</h3>
+              <p className="text-gray-400 leading-relaxed max-w-xs">Every provider undergoes a strict, comprehensive background check before joining.</p>
             </div>
-            <h3 className="text-xl font-bold mb-2">Verified Pros</h3>
-            <p className="text-gray-600">Every provider undergoes a strict background check.</p>
-          </div>
-          <div className="flex flex-col items-center">
-            <div className="bg-blue-100 p-4 rounded-full mb-4">
-              <Shield className="text-blue-600 h-8 w-8" />
+            
+            <div className="flex flex-col items-center">
+              <div className="bg-white/10 p-5 rounded-2xl mb-6 backdrop-blur-md border border-white/10 text-purple-400">
+                <Star className="h-10 w-10" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4 text-white">Quality Guarantee</h3>
+              <p className="text-gray-400 leading-relaxed max-w-xs">We stand behind the work. Every job comes with our 30-day workmanship guarantee.</p>
             </div>
-            <h3 className="text-xl font-bold mb-2">Quality Guarantee</h3>
-            <p className="text-gray-600">We back every job with a 30-day workmanship guarantee.</p>
-          </div>
-          <div className="flex flex-col items-center">
-            <div className="bg-blue-100 p-4 rounded-full mb-4">
-              <Clock className="text-blue-600 h-8 w-8" />
+            
+            <div className="flex flex-col items-center">
+              <div className="bg-white/10 p-5 rounded-2xl mb-6 backdrop-blur-md border border-white/10 text-teal-400">
+                <Clock className="h-10 w-10" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4 text-white">Flexible Scheduling</h3>
+              <p className="text-gray-400 leading-relaxed max-w-xs">Pick a precise time that works for your schedule, including emergency same-day service.</p>
             </div>
-            <h3 className="text-xl font-bold mb-2">Flexible Scheduling</h3>
-            <p className="text-gray-600">Pick a time that works for you, including same-day service.</p>
           </div>
         </div>
       </section>

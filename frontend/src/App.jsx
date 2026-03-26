@@ -9,6 +9,9 @@ import CustomerDashboard from './pages/CustomerDashboard';
 import ProviderDashboard from './pages/ProviderDashboard';
 import BookingDetails from './pages/BookingDetails';
 import Onboarding from './pages/Onboarding';
+import Services from './pages/Services';
+import ProviderDetails from './pages/ProviderDetails';
+import Invoices from './pages/Invoices';
 
 function App() {
   const { getToken, isLoaded, isSignedIn } = useAuth();
@@ -55,6 +58,9 @@ function App() {
           <Route path="/provider" element={<ProviderDashboard />} />
           <Route path="/booking/:id" element={<BookingDetails />} />
           <Route path="/onboarding" element={<Onboarding setUserRole={setUserRole} />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/provider-profile/:id" element={<ProviderDetails />} />
+          <Route path="/invoices" element={<Invoices />} />
         </Routes>
       </main>
     </div>

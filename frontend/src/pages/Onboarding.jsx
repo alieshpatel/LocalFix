@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '@clerk/clerk-react';
 import { Wrench, Home as HomeIcon } from 'lucide-react';
 import api from '../utils/api';
 
 function Onboarding({ setUserRole }) {
   const navigate = useNavigate();
+  const { user } = useUser();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -12,7 +14,7 @@ function Onboarding({ setUserRole }) {
     setLoading(true);
     setError(null);
     try {
-      await api.put('/users/profile', { role });
+      await api.put('/users/role', { clerkId: user.id, role });
       setUserRole(role);
       navigate(`/${role}`);
     } catch (err) {
