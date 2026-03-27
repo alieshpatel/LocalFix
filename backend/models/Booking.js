@@ -19,6 +19,10 @@ const bookingSchema = new mongoose.Schema({
     type: String,
     enum: ["pending", "paid"],
     default: "pending"
+  },
+  
+  warrantyEndsAt: {
+    type: Date
   }
 }, { timestamps: true });
 
