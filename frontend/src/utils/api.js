@@ -5,6 +5,7 @@ const api = axios.create({
 });
 
 export const setupInterceptors = (getToken) => {
+  api.interceptors.request.clear();
   api.interceptors.request.use(
     async (config) => {
       const token = await getToken();
