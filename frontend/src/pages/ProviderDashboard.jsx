@@ -74,12 +74,17 @@ function ProviderDashboard() {
   };
 
   const toggleAvailability = async () => {
+    if (!profile || togglingAvail) return;
+    const newVal = !profile.isAvailable;
+    // Optimistic update so UI feels instant
+    setProfile(prev => ({ ...prev, isAvailable: newVal }));
     setTogglingAvail(true);
     try {
-      await api.put('/users/availability', { isAvailable: !profile.isAvailable });
-      setProfile(prev => ({ ...prev, isAvailable: !prev.isAvailable }));
+      await api.put('/users/availability', { isAvailable: newVal });
     } catch (err) {
-      console.error(err);
+      // Silently revert – no annoying alert
+      console.error('Availability toggle failed:', err.response?.data || err.message);
+      setProfile(prev => ({ ...prev, isAvailable: !newVal }));
     } finally {
       setTogglingAvail(false);
     }
@@ -111,24 +116,30 @@ function ProviderDashboard() {
           <p className="text-gray-500 mt-1">Manage your leads, jobs, and professional profile.</p>
         </div>
         {profile && (
-          <button
-            onClick={toggleAvailability}
-            disabled={togglingAvail}
-            className={`flex items-center gap-3 px-5 py-2.5 rounded-full font-bold border-2 transition-all shadow-sm ${
-              profile.isAvailable
-                ? 'bg-green-50 border-green-200 text-green-700 hover:bg-green-100'
-                : 'bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100'
-            }`}
-          >
-            {togglingAvail ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
-            ) : profile.isAvailable ? (
-              <ToggleRight className="w-6 h-6 text-green-600" />
-            ) : (
-              <ToggleLeft className="w-6 h-6 text-gray-400" />
-            )}
-            {profile.isAvailable ? 'Online & Accepting' : 'Offline'}
-          </button>
+          <div className="flex items-center gap-3">
+            <span className={`text-sm font-bold ${profile.isAvailable ? 'text-green-600' : 'text-gray-400'}`}>
+              {profile.isAvailable ? '🟢 Online & Accepting Jobs' : '⚫ Offline'}
+            </span>
+            <button
+              type="button"
+              onClick={toggleAvailability}
+              disabled={togglingAvail}
+              aria-label="Toggle availability"
+              className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-400 disabled:opacity-60 shadow-inner ${
+                profile.isAvailable ? 'bg-green-500' : 'bg-gray-300'
+              }`}
+            >
+              <span
+                className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-md transition-transform duration-300 ${
+                  profile.isAvailable ? 'translate-x-7' : 'translate-x-1'
+                }`}
+              >
+                {togglingAvail && (
+                  <Loader2 className="w-4 h-4 text-gray-400 animate-spin absolute inset-1" />
+                )}
+              </span>
+            </button>
+          </div>
         )}
       </div>
 

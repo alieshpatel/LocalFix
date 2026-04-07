@@ -74,12 +74,12 @@ function ProviderDetails() {
           <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-4">
             <div>
               <h1 className="text-3xl font-extrabold text-gray-900 flex items-center gap-2 justify-center md:justify-start">
-                {provider.name} {provider.reliabilityScore > 80 && <CheckCircle className="w-6 h-6 text-green-500" />}
+                {provider.name} {provider.reliabilityScore >= 4.0 && <CheckCircle className="w-6 h-6 text-green-500" />}
               </h1>
               <div className="flex items-center gap-4 mt-2 text-gray-600 justify-center md:justify-start">
                 <span className="flex items-center gap-1"><MapPin className="w-4 h-4"/> Local Pro</span>
                 <span className="flex items-center gap-1 text-primary-600 font-medium">
-                  <Star className="w-4 h-4 fill-current"/> {provider.reliabilityScore / 20 || 5} ({provider.totalReviews} reviews)
+                  <Star className="w-4 h-4 fill-current"/> {(provider.reliabilityScore || 5).toFixed(1)} ({provider.totalReviews || 0} reviews)
                 </span>
               </div>
             </div>
@@ -183,7 +183,7 @@ function ProviderDetails() {
                   <div key={review._id} className="border-b border-gray-100 pb-5 last:border-0 last:pb-0">
                     <div className="flex justify-between items-start mb-2">
                       <div>
-                        <span className="font-semibold text-gray-900 block">{review.customer?.name || "Customer"}</span>
+                        <span className="font-semibold text-gray-900 block">{review.fromUser?.name || "Customer"}</span>
                         <div className="flex text-yellow-400 text-sm mt-1">
                           {[...Array(5)].map((_, i) => (
                             <Star key={i} className={`w-4 h-4 ${i < review.rating ? 'fill-current' : 'text-gray-300'}`} />
