@@ -25,6 +25,7 @@ function CustomerDashboard() {
   const getStatusConfig = (status) => {
     switch (status) {
       case 'pending': return { color: 'bg-amber-100 text-amber-800 border-amber-200', icon: Clock, label: 'Pending' };
+      case 'quoted': return { color: 'bg-indigo-100 text-indigo-800 border-indigo-200', icon: Clock, label: 'Estimate Received' };
       case 'accepted': return { color: 'bg-blue-100 text-blue-800 border-blue-200', icon: CheckCircle, label: 'Accepted' };
       case 'in-progress': return { color: 'bg-purple-100 text-purple-800 border-purple-200', icon: Activity, label: 'In Progress' };
       case 'completed': return { color: 'bg-green-100 text-green-800 border-green-200', icon: CheckCircle, label: 'Completed' };

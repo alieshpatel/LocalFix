@@ -46,6 +46,19 @@ function BookingDetails() {
     }
   };
 
+  const confirmQuote = async () => {
+    setActionLoading(true);
+    try {
+      const res = await api.put(`/bookings/${id}/confirm-quote`);
+      setBooking(res.data);
+    } catch (err) {
+      console.error(err);
+      alert('Failed to confirm quote');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
   const handlePayment = async () => {
     setActionLoading(true);
     try {
@@ -85,6 +98,7 @@ function BookingDetails() {
   const getStatusStyle = (status) => {
     switch (status) {
       case 'pending': return 'bg-amber-100 text-amber-800 border-amber-200';
+      case 'quoted': return 'bg-indigo-100 text-indigo-800 border-indigo-200';
       case 'accepted': return 'bg-blue-100 text-blue-800 border-blue-200';
       case 'in-progress': return 'bg-purple-100 text-purple-800 border-purple-200';
       case 'completed': return 'bg-green-100 text-green-800 border-green-200';
@@ -155,6 +169,16 @@ function BookingDetails() {
                 </div>
               </div>
             </div>
+
+            {booking.problemDescription && (
+              <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Problem Description</h3>
+                <p className="text-gray-700 whitespace-pre-line">{booking.problemDescription}</p>
+                {booking.problemImage && (
+                  <img src={booking.problemImage} alt="Problem" className="mt-4 rounded-xl max-h-80 object-cover w-full" />
+                )}
+              </div>
+            )}
 
             {/* People */}
             <div>
@@ -332,6 +356,21 @@ function BookingDetails() {
                 {booking.paymentStatus === 'paid' && (
                   <div className="bg-green-50 border border-green-200 text-green-700 rounded-xl p-4 text-center font-bold flex items-center justify-center gap-2">
                     <CheckCircle className="w-5 h-5" /> Payment Complete
+                  </div>
+                )}
+                {isCustomer && booking.status === 'quoted' && (
+                  <button
+                    onClick={confirmQuote}
+                    disabled={actionLoading}
+                    className="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 transition shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    {actionLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
+                    Accept Estimate & Confirm Booking
+                  </button>
+                )}
+                {!isCustomer && booking.status === 'quoted' && (
+                  <div className="bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-xl p-3 text-center text-sm font-medium">
+                    Awaiting customer to accept your estimate
                   </div>
                 )}
                 {booking.status === 'pending' && (

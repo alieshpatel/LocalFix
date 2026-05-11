@@ -18,6 +18,8 @@ function ProviderDashboard() {
   const [loadingJobs, setLoadingJobs] = useState(true);
   const [savingProfile, setSavingProfile] = useState(false);
   const [togglingAvail, setTogglingAvail] = useState(false);
+  const [quotingJobId, setQuotingJobId] = useState(null);
+  const [quoteAmount, setQuoteAmount] = useState('');
 
   const loadJobs = useCallback(async () => {
     try {
@@ -91,11 +93,14 @@ function ProviderDashboard() {
   };
 
   const acceptJob = async (jobId) => {
+    if (!quoteAmount) return alert('Please enter an estimated amount');
     try {
-      await api.put(`/bookings/${jobId}/accept`);
+      await api.put(`/bookings/${jobId}/accept`, { estimatedPrice: Number(quoteAmount) });
+      setQuotingJobId(null);
+      setQuoteAmount('');
       await loadJobs();
     } catch (error) {
-      alert('Failed to accept job: ' + (error.response?.data?.error || error.message));
+      alert('Failed to quote job: ' + (error.response?.data?.error || error.message));
     }
   };
 
@@ -312,13 +317,49 @@ function ProviderDashboard() {
                     <p className="flex items-center gap-2"><Calendar className="w-4 h-4 text-green-500" /> {new Date(job.scheduledDate).toLocaleDateString()}</p>
                     <p className="flex items-center gap-2"><MapPin className="w-4 h-4 text-green-500" /> {job.address}</p>
                     {job.customer && <p className="flex items-center gap-2 text-primary-600">Client: {job.customer.name}</p>}
+                    {job.problemDescription && (
+                      <div className="mt-3 bg-white/50 p-3 rounded-xl border border-gray-100">
+                        <p className="text-gray-700 font-bold mb-1 text-xs uppercase tracking-wide">Problem Description</p>
+                        <p className="text-gray-800 italic">"{job.problemDescription}"</p>
+                      </div>
+                    )}
+                    {job.problemImage && <img src={job.problemImage} alt="Problem" className="w-full h-32 object-cover rounded-xl mt-2 border border-gray-200" />}
                   </div>
-                  <button
-                    onClick={() => acceptJob(job._id)}
-                    className="w-full bg-green-600 text-white py-2.5 rounded-xl font-bold hover:bg-green-700 transition shadow-md flex items-center justify-center gap-2"
-                  >
-                    <CheckCircle className="w-4 h-4" /> Accept This Job
-                  </button>
+                  
+                  {quotingJobId === job._id ? (
+                    <div className="flex items-center gap-2 mt-3">
+                      <div className="relative flex-1">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-bold">$</span>
+                        <input
+                          type="number"
+                          min="1"
+                          placeholder="Estimate"
+                          value={quoteAmount}
+                          onChange={e => setQuoteAmount(e.target.value)}
+                          className="w-full bg-white border border-green-300 rounded-xl py-2 pl-7 pr-3 focus:outline-none focus:ring-2 focus:ring-green-500 font-bold"
+                        />
+                      </div>
+                      <button
+                        onClick={() => acceptJob(job._id)}
+                        className="bg-green-600 text-white px-4 py-2 rounded-xl font-bold hover:bg-green-700 transition shadow-md"
+                      >
+                        Send Quote
+                      </button>
+                      <button
+                        onClick={() => setQuotingJobId(null)}
+                        className="bg-gray-200 text-gray-700 px-3 py-2 rounded-xl hover:bg-gray-300"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => setQuotingJobId(job._id)}
+                      className="w-full bg-green-600 text-white py-2.5 rounded-xl font-bold hover:bg-green-700 transition shadow-md flex items-center justify-center gap-2 mt-3"
+                    >
+                      <DollarSign className="w-4 h-4" /> Provide Estimate
+                    </button>
+                  )}
                 </div>
               ))}
             </div>

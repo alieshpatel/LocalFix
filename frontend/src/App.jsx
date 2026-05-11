@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { useAuth, useUser } from '@clerk/clerk-react';
 import api, { setupInterceptors } from './utils/api';
 
@@ -58,7 +58,10 @@ function App() {
           <Route path="/provider" element={<ProviderDashboard />} />
           <Route path="/booking/:id" element={<BookingDetails />} />
           <Route path="/onboarding" element={<Onboarding setUserRole={setUserRole} />} />
-          <Route path="/services" element={<Services />} />
+          <Route
+            path="/services"
+            element={userRole === 'provider' ? <Navigate to="/provider" replace /> : <Services />}
+          />
           <Route path="/provider-profile/:id" element={<ProviderDetails />} />
           <Route path="/invoices" element={<Invoices />} />
         </Routes>

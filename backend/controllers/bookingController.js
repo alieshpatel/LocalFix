@@ -2,10 +2,9 @@ const Booking = require("../models/Booking");
 const User = require("../models/User");
 const Invoice = require("../models/Invoice");
 
-// Create booking
 exports.createBooking = async (req, res) => {
   try {
-    const { serviceId, address, price, scheduledDate } = req.body;
+    const { serviceId, address, problemDescription, problemImage, scheduledDate } = req.body;
     const customer = await User.findOne({ clerkId: req.auth.userId });
     if (!customer) return res.status(404).json({ error: "Customer not found" });
     if (customer.role !== "customer") return res.status(403).json({ error: "Only customers can create bookings" });
@@ -15,7 +14,10 @@ exports.createBooking = async (req, res) => {
       service: serviceId,
       scheduledDate,
       address,
-      price,
+      problemDescription,
+      problemImage,
+      provider: req.body.providerId || undefined,
+      price: 0,
       status: "pending"
     });
     res.status(201).json(booking);
@@ -48,7 +50,29 @@ exports.acceptBooking = async (req, res) => {
     if (!booking) return res.status(404).json({ error: "Booking not found" });
     if (booking.status !== "pending") return res.status(400).json({ error: "Booking is not pending" });
 
+    const { estimatedPrice } = req.body;
+    if (!estimatedPrice) return res.status(400).json({ error: "Estimated price is required" });
+
     booking.provider = provider._id;
+    booking.price = estimatedPrice;
+    booking.status = "quoted";
+    await booking.save();
+    res.json(booking);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Confirm quote (customer only)
+exports.confirmQuote = async (req, res) => {
+  try {
+    const customer = await User.findOne({ clerkId: req.auth.userId });
+    if (!customer || customer.role !== "customer") return res.status(403).json({ error: "Only customers can confirm quotes" });
+
+    const booking = await Booking.findById(req.params.id);
+    if (!booking) return res.status(404).json({ error: "Booking not found" });
+    if (booking.status !== "quoted") return res.status(400).json({ error: "Booking is not in quoted status" });
+
     booking.status = "accepted";
     await booking.save();
     res.json(booking);
@@ -125,12 +149,17 @@ exports.getMyBookings = async (req, res) => {
     if (!user) return res.status(404).json({ error: "User not found" });
 
     if (user.role === "provider") {
-      const myJobs = await Booking.find({ provider: user._id })
+      const myJobs = await Booking.find({ 
+          provider: user._id,
+          status: { $ne: "pending" }
+        })
         .populate("service")
         .populate("customer", "name phone avatar")
         .sort({ createdAt: -1 });
 
-      const availableJobs = await Booking.find({ status: "pending", provider: { $exists: false } })
+      const availableJobs = await Booking.find({ 
+          status: "pending" 
+        })
         .populate("service")
         .populate("customer", "name phone avatar")
         .sort({ createdAt: -1 });

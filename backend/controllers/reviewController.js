@@ -9,6 +9,10 @@ exports.createReview = async (req, res) => {
 
     if (!fromUser) return res.status(404).json({ error: "User not found" });
 
+    // Prevent duplicate reviews
+    const existing = await Review.findOne({ booking: bookingId, fromUser: fromUser._id });
+    if (existing) return res.status(400).json({ error: "Review already submitted for this booking." });
+
     const review = await Review.create({
       booking: bookingId,
       fromUser: fromUser._id,
