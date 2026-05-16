@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Calendar, MapPin, X, Loader2, Star, CheckCircle, ChevronLeft, User } from 'lucide-react';
+import { Calendar, MapPin, X, Loader2, Star, CheckCircle, ChevronLeft } from 'lucide-react';
 import api from '../utils/api';
 
 const JOB_TYPES = [
@@ -14,9 +14,8 @@ const JOB_TYPES = [
 ];
 
 function ServiceRequestModal({ isOpen, onClose, onSuccess }) {
-  // Step 1: pick job type  |  Step 2: pick provider  |  Step 3: schedule
   const [step, setStep] = useState(1);
-  const [jobType, setJobType] = useState(null);       // { label, skill, emoji }
+  const [jobType, setJobType] = useState(null);
   const [providers, setProviders] = useState([]);
   const [selectedProvider, setSelectedProvider] = useState(null);
   const [address, setAddress] = useState('');
@@ -26,7 +25,6 @@ function ServiceRequestModal({ isOpen, onClose, onSuccess }) {
   const [loadingProviders, setLoadingProviders] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  // Reset when closed
   useEffect(() => {
     if (!isOpen) {
       setStep(1);
@@ -74,11 +72,20 @@ function ServiceRequestModal({ isOpen, onClose, onSuccess }) {
         problemImage = uploadRes.data.url;
       }
 
-      // Find or create a service that matches the skill
+      // Fetch services and find a match
       const servicesRes = await api.get('/services');
-      const matchedService = servicesRes.data.find(s =>
+      const servicesList = servicesRes.data;
+
+      const matchedService = servicesList.find(s =>
         s.category?.toLowerCase() === jobType.skill.toLowerCase()
-      ) || servicesRes.data[0];
+      ) || servicesList[0];
+
+      // Guard: no services in DB at all
+      if (!matchedService || !matchedService._id) {
+        alert('No services are set up yet. Please contact support.');
+        setSubmitting(false);
+        return;
+      }
 
       await api.post('/bookings', {
         serviceId: matchedService._id,
@@ -86,8 +93,9 @@ function ServiceRequestModal({ isOpen, onClose, onSuccess }) {
         scheduledDate: new Date(date),
         problemDescription,
         problemImage,
-        providerId: selectedProvider._id,   // note: backend will assign on accept, this is a hint
+        providerId: selectedProvider._id,
       });
+
       onSuccess();
       onClose();
     } catch (err) {
@@ -210,7 +218,6 @@ function ServiceRequestModal({ isOpen, onClose, onSuccess }) {
           {/* Step 3: Schedule */}
           {step === 3 && (
             <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Selected provider recap */}
               {selectedProvider && (
                 <div className="flex items-center gap-3 bg-primary-50 border border-primary-100 rounded-2xl p-4">
                   <img
