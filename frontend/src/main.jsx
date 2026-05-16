@@ -7,7 +7,7 @@ import App from './App.jsx';
 
 // Since user didn't provide keys, we'll try to use a placeholder or check environment variables
 // It's essential to have a valid publishable key.
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || "pk_test_placeholder_key";
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || "https://localfix-wl5e.onrender.com";
 
 if (!PUBLISHABLE_KEY && process.env.NODE_ENV === "development") {
   console.error("Missing Publishable Key")
