@@ -1,18 +1,27 @@
 <div align="center">
 
-<img src="https://ik.imagekit.io/Techmitra/Screenshot%202026-05-13%20172136.png" width="20%" alt="LocalFix Banner"/>
+<img src="https://ik.imagekit.io/Techmitra/Screenshot%202026-05-13%20172136.png" width="20%" alt="LocalFix Logo"/>
 
-<br/>
+# 🚀 LocalFix
 
-<h3><b>Find Trusted Local Services Anytime, Anywhere </b></h3>
+### 🔧 Find Trusted Local Services Anytime, Anywhere
 
 <p>
 LocalFix helps users connect with nearby technicians, repair experts, and trusted service providers in real-time.
 </p>
 
-<br>
+<br/>
 
-<div align="center">
+<a href="https://localfix-three.vercel.app/">
+  <img src="https://img.shields.io/badge/🚀_Live_Demo-Visit_Website-00C853?style=for-the-badge"/>
+</a>
+
+<a href="https://github.com/alieshpatel/LocalFix">
+  <img src="https://img.shields.io/badge/📂_Source_Code-GitHub-181717?style=for-the-badge&logo=github"/>
+</a>
+
+
+<br/><br/>
 
 <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"/>
 <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"/>
@@ -21,10 +30,9 @@ LocalFix helps users connect with nearby technicians, repair experts, and truste
 <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white"/>
 <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white"/>
 <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white"/>
-<img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"/>
+<img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"/>
+<img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white"/>
 
-
-</div><br/>
 </div>
 
 ---
@@ -34,11 +42,12 @@ LocalFix helps users connect with nearby technicians, repair experts, and truste
 > **LocalFix** is a modern community-powered platform designed to solve everyday local problems quickly and efficiently.
 
 Whether users need:
+
 - ⚡ Electricians
-- 🔧 Appliance repair
-- 🚰 Plumbing services
-- 🚗 Vehicle assistance
-- 🏠 Home maintenance
+- 🔧 Appliance Repair
+- 🚰 Plumbing Services
+- 🚗 Vehicle Assistance
+- 🏠 Home Maintenance
 
 LocalFix connects them with trusted nearby professionals instantly.
 
@@ -75,9 +84,9 @@ LocalFix connects them with trusted nearby professionals instantly.
 
 <div align="center">
 
-| Frontend | Backend | Database | Tools |
+| Frontend | Backend | Database | Deployment |
 |---|---|---|---|
-| React, Tailwind CSS | Node.js, Express.js | MongoDB | Git, GitHub |
+| React, Tailwind CSS | Node.js, Express.js | MongoDB Atlas | Vercel, Render |
 
 </div>
 
@@ -143,12 +152,26 @@ npm install
 ## 4️⃣ Run Development Server
 
 ```bash
-npm start
+npm run dev
 ```
-
 
 ---
 
+# 🚀 Live Demo
+
+<div align="center">
+
+## 🌐 Website is Live
+
+### 🔗 https://localfix-three.vercel.app/
+
+<a href="https://localfix-three.vercel.app/">
+  <img src="https://img.shields.io/badge/Visit-Live_Demo-success?style=for-the-badge&logo=vercel"/>
+</a>
+
+</div>
+
+---
 
 # 📸 Screenshots
 
@@ -161,8 +184,6 @@ npm start
 
 ## 🔍 Service Finder
 <img src="https://ik.imagekit.io/Techmitra/Screenshot%202026-05-13%20172606.png" width="90%"/>
-
-<br/><br/>
 
 </div>
 
@@ -201,6 +222,7 @@ npm start
 | Authentication | ✅ |
 | REST APIs | ✅ |
 | MongoDB Integration | ✅ |
+| Live Deployment | ✅ |
 | Real-Time Services | 🚧 |
 | AI Recommendations | 🚧 |
 
